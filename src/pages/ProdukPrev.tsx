@@ -36,7 +36,7 @@ const ProdukPrev: React.FC = () => {
         setError('Gagal memuat produk😓.');
       })
       .finally(() => {
-        setLoading(false); // 👈 Set loading selesai
+        setLoading(false); 
       });
   }, []);
 

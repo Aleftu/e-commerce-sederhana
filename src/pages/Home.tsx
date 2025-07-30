@@ -1,9 +1,10 @@
-import { useEffect, useState } from "react";
-import Navbar from "../components/Navbar";
-import GradientBackground from "../components/Background";
-import Loading from "../components/Loading";
-import ProdukPrev from "./ProdukPrev";
-import Footer from "../components/Footer";
+import { useEffect, useState } from 'react';
+import Navbar from '../components/Navbar';
+import GradientBackground from '../components/Background';
+import Loading from '../components/Loading';
+import ProdukPrev from './ProdukPrev';
+import KontakComponent from '../components/Kontak';
+import Footer from '../components/Footer';
 
 const HomePage = () => {
   const [loading, setLoading] = useState(true);
@@ -20,23 +21,25 @@ const HomePage = () => {
   if (loading) {
     return <Loading />;
   }
-  
 
- return (
-  <div className="min-h-screen flex flex-col overflow-x-hidden">
-    <Navbar />
-    <GradientBackground />
-    <hr className="mt-3 w-44 mx-auto" />
-    <h1 className="text-center mt-1">Daftar Produk</h1>
+  return (
+    <div className="min-h-screen flex flex-col">
+      <Navbar />
+      <GradientBackground />
+      <hr className="mt-3 w-44 mx-auto" />
+      <h1 className="text-center mt-1">Daftar Produk</h1>
 
-    <div className="mb-5 card rounded-md bg-[#beccfc] mt-3">
-      <ProdukPrev />
+      <div className="mb-5 card rounded-md bg-[#beccfc] mt-3">
+        <ProdukPrev />
+      </div>
+      <hr className="mt-3 w-44 mx-auto" />
+      <h1 className="text-center mt-1">Daftar Produk</h1>
+      <div className="mb-5 card rounded-md bg-[#beccfc] mt-3">
+      <KontakComponent />
+      </div>
+      <Footer />
     </div>
-
-    <Footer />
-  </div>
-);
-
+  );
 };
 
 export default HomePage;

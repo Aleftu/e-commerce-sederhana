@@ -243,6 +243,7 @@ const AdminDashboard: React.FC = () => {
             <table className="min-w-full bg-white border shadow text-black">
               <thead className="bg-[#5266a9] text-white">
                 <tr>
+                  <th className="p-2">Foto</th>
                   <th className="p-2">Merk</th>
                   <th className="p-2">Tipe</th>
                   <th className="p-2">Tahun</th>
@@ -254,6 +255,18 @@ const AdminDashboard: React.FC = () => {
               <tbody>
                 {dataMobil.map((item, index) => (
                   <tr key={item._id || item.id || index} className="border-t">
+                    <td className="p-2">
+                      {item.foto_url ? (
+                        <img
+                          src={item.foto_url}
+                          alt="Mobil"
+                          className="w-20 h-16 object-cover rounded"
+                        />
+                      ) : (
+                        <span className="text-gray-400">Belum ada</span>
+                      )}
+                    </td>
+
                     <td className="p-2">{item.merk}</td>
                     <td className="p-2">{item.tipe}</td>
                     <td className="p-2">{item.tahun}</td>
@@ -405,6 +418,7 @@ const AdminDashboard: React.FC = () => {
                     return;
                   }
                   const formData = new FormData();
+                  formData.append('id_mobil', selectedMobilId);
                   formData.append('foto', foto);
                   formData.append('deskripsi', deskripsi);
                   try {
@@ -416,7 +430,7 @@ const AdminDashboard: React.FC = () => {
                       return;
                     }
                     await axios.post(
-                      `https://api-dealer-car-production.up.railway.app/mobil/${selectedMobilId}/foto`,
+                      `https://api-dealer-car-production.up.railway.app/upload`,
                       formData,
                       {
                         headers: {

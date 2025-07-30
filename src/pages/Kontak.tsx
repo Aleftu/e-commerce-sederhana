@@ -9,7 +9,7 @@ import {
 
 const Kontak: React.FC = () => {
   return (
-      <div className="max-w-3xl mx-auto p-6 text-gray-800 bg-white">
+    <div className="min-h-screen max-w-3xl mx-auto p-6 text-gray-800 bg-white">
         <Navbar />
       <h1 className="text-3xl font-bold mb-4 text-blue-800">Hubungi Kami</h1>
 

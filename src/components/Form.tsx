@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import type { Produk } from '../types/ProdukTypes';
+
 
 type Props = {
   onSubmit: (produk: Omit<Produk, 'id'>, id?: number) => void;

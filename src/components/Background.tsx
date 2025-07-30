@@ -1,5 +1,5 @@
 import React from 'react';
-import '../App.css'; // Import your CSS for the stars
+import '../App.css'; 
 import { Link } from 'react-router-dom';
 
 const GradientBackground: React.FC = () => {
