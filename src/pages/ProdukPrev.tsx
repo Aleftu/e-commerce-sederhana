@@ -60,7 +60,7 @@ const ProdukPrev: React.FC = () => {
 
   // Tampilkan produk jika tidak error dan sudah selesai loading
   return (
-    <div className="bg-gray-300 py-4">
+    <div className="bg-[#808dc4] py-4">
       <div className="max-w-screen-xl mx-auto px-4 overflow-x-hidden">
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 text-black font-medium">
           {produkprev.map((item) => (
@@ -69,7 +69,7 @@ const ProdukPrev: React.FC = () => {
               className="relative border rounded p-3 bg-white shadow max-w-full"
             >
               {/* Status badge */}
-              <div className="absolute top-2 left-2 bg-[#3754b1] text-white text-xs font-semibold px-2 py-1 rounded-md shadow">
+              <div className="absolute top-2 left-2 bg-[#5b6aa9] text-white text-xs font-bold px-2 py-1 rounded-md shadow">
                 {item.status}
               </div>
 
@@ -86,17 +86,17 @@ const ProdukPrev: React.FC = () => {
                 {item.merek} {item.tipe}
               </h3>
               <div className="space-y-1 mt-2 text-sm">
-                <p>Tahun: {item.tahun}</p>
-                <p>Spesifikasi: {item.spesifikasi}</p>
-                <p>Keterangan: {item.keterangan}</p>
+                <p>{item.tahun}</p>
+                <p>{item.spesifikasi}</p>
+                <p>{item.keterangan}</p>
               </div>
-              <p className="mt-2 font-semibold">Harga: Rp {item.harga}</p>
+              <p className="mt-2 font-semibold">{item.harga}</p>
 
               {/* Tombol Aksi */}
               <div className="flex flex-wrap gap-2 mt-4 text-white">
                 <Link
                   to={`/produk/${item.id}`}
-                  className="bg-[#5266a9] rounded-md w-28 py-1 text-sm text-center"
+                  className="bg-[#6978af] rounded-md w-28 py-1 text-sm text-center"
                 >
                   Lihat detail
                 </Link>
@@ -106,7 +106,7 @@ const ProdukPrev: React.FC = () => {
                   )}%20${encodeURIComponent(item.tipe)}`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="bg-[#35467e] rounded-md w-24 py-1 text-sm text-center"
+                  className="bg-[#374470] rounded-md w-24 py-1 text-sm text-center"
                 >
                   Hubungi
                 </a>
@@ -118,7 +118,7 @@ const ProdukPrev: React.FC = () => {
         {/* Tombol Lihat Lebih Banyak */}
         <div className="text-center mt-6">
           <Link to="/list-produk">
-            <button className="bg-[#35467e] text-white px-6 py-2 rounded-md hover:bg-[#2c3b69] transition">
+            <button className="bg-[#52639e] text-white px-6 py-2 rounded-md hover:bg-[#2c3b69] transition">
               Lihat Lebih Banyak
             </button>
           </Link>

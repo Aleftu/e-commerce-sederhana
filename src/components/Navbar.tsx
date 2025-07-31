@@ -18,7 +18,7 @@ const Navbar = () => {
   return (
     <div
       className={`navbar sticky top-0 z-50 shadow transition-colors duration-300 ${
-        scroll ? "bg-[#5266a9] text-white" : "bg-[#35467e] text-white"
+        scroll ? "bg-[#8d9bd1] text-white" : "bg-[#35467e] text-white"
       }`}
     >
       <div className="navbar-start">
@@ -41,7 +41,7 @@ const Navbar = () => {
         </div>
         <Link
           to="/"
-          className="mx-5 text-xl font-extrabold first-letter:text-[#567af3] bg-gradient-to-b from-[#7f92d1] via-[#5d7de7] to-cyan-400 bg-clip-text text-transparent first-letter:text-3xl"
+          className="mx-5 text-xl font-extrabold first-letter:text-[#567af3] first-letter:text-3xl"
         >
           45Motor
         </Link>

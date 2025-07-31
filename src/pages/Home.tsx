@@ -26,17 +26,29 @@ const HomePage = () => {
     <div className="min-h-screen flex flex-col">
       <Navbar />
       <GradientBackground />
-      <hr className="mt-3 w-44 mx-auto" />
-      <h1 className="text-center mt-1">Daftar Produk</h1>
 
-      <div className="mb-5 card rounded-md bg-[#beccfc] mt-3">
-        <ProdukPrev />
+      <div className="bg-[#808dc4]">
+        {/* Produk Section */}
+        <h1 className="text-center mt-1 font-semibold text-lg">
+          Daftar Produk
+        </h1>
+
+        <div className="mb-10 card rounded-md bg-[#beccfc] mt-3 ">
+          <ProdukPrev />
+        </div>
+
+        {/* Kontak Section */}
+        <div className="bg-[#8d9bd1] relative z-10">
+          <h1 className="mb-5 text-center mt-5 font-semibold text-xl">
+            Informasi Kontak
+          </h1>
+
+          <div className="mb-5 card rounded-md mt-3">
+            <KontakComponent />
+          </div>
+        </div>
       </div>
-      <hr className="mt-3 w-44 mx-auto" />
-      <h1 className="text-center mt-1">Daftar Produk</h1>
-      <div className="mb-5 card rounded-md bg-[#beccfc] mt-3">
-      <KontakComponent />
-      </div>
+
       <Footer />
     </div>
   );

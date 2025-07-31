@@ -1,100 +1,127 @@
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom'; 
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { Swiper, SwiperSlide } from 'swiper/react';
+import { Navigation, Pagination, Autoplay } from 'swiper/modules';
 import 'swiper/css';
+import 'swiper/css/navigation';
+import 'swiper/css/pagination';
+import Footer from '../components/Footer';
 
-// Interface produk sesuai frontend (merek dari "merk" BE)
 interface ProdukDetailView {
   id: number;
-  merek: string; // mapping dari BE: merk
+  merek: string;
   tipe: string;
   harga: string | number;
   tahun: string | number;
   spesifikasi: string;
   keterangan: string;
   status: string;
-  foto: string[]; // url dari array objek foto di BE
+  foto: string[];
 }
 
 const ProdukDetail: React.FC = () => {
   const { id } = useParams<{ id: string }>();
+  const navigate = useNavigate(); // ✅ gunakan const
+
   const [produk, setProduk] = useState<ProdukDetailView | null>(null);
 
   useEffect(() => {
-    axios
-      .get(`https://api-dealer-car-production.up.railway.app/mobil/${id}`)
-      .then((res) => {
-        const allProducts = res.data.data;
+  axios
+    .get(`https://api-dealer-car-production.up.railway.app/mobil/${id}`)
+    .then((res) => {
+      console.log('Response dari API:', res.data);
 
-        // Cari produk yang sesuai ID dari URL
-        const found = allProducts.find((item: any) => String(item.id) === id);
+      const found = res.data.data.find((item: any) => item.id === Number(id));
+      if (!found) {
+        console.error(`Produk dengan id ${id} tidak ditemukan.`);
+        return;
+      }
 
-        if (!found) {
-          console.error('Produk tidak ditemukan.');
-          return;
-        }
+      const fotoUrls = Array.isArray(found.foto)
+  ? found.foto.map((f: any) =>
+      `https://api-dealer-car-production.up.railway.app/uploads/${f.filename}`
+    )
+  : [];
 
-        // Ambil URL dari array foto
-        const fotoUrls = Array.isArray(found.foto)
-          ? found.foto.map((f: any) => f.url)
-          : [];
+      const produkBaru: ProdukDetailView = {
+        id: found.id,
+        merek: found.merk,
+        tipe: found.tipe,
+        harga: found.harga,
+        tahun: found.tahun,
+        spesifikasi: found.spesifikasi,
+        keterangan: found.keterangan,
+        status: found.status,
+        foto: fotoUrls,
+      };
 
-        // Buat objek produk untuk ditampilkan
-        const produkBaru: ProdukDetailView = {
-          id: found.id,
-          merek: found.merk, // BE pakai 'merk'
-          tipe: found.tipe,
-          harga: found.harga,
-          tahun: found.tahun,
-          spesifikasi: found.spesifikasi,
-          keterangan: found.keterangan,
-          status: found.status,
-          foto: fotoUrls,
-        };
+      setProduk(produkBaru);
+    })
+    .catch((err) => {
+      console.error('Gagal mengambil detail produk:', err);
+    });
+}, [id]);
 
-        setProduk(produkBaru);
-      })
-      .catch((err) => {
-        console.error('Gagal mengambil detail produk:', err);
-      });
-  }, [id]);
+
 
   if (!produk) return <p className="p-4">Loading...</p>;
 
   return (
-    <div className="p-4 max-w-4xl mx-auto text-white">
-      <h2 className="text-2xl font-bold mb-4">{produk.merek} {produk.tipe}</h2>
+    <div className="max-w-4xl mx-auto px-4 py-8 text-gray-800 bg-[#beccfc]">
+      <button
+        onClick={() => navigate('/list-produk')} 
+        className="mb-4 px-4 py-2 bg-white text-[#35467e] border-[#35467e] rounded hover:bg-[#35467e] hover:text-white transition"
+      >
+        ← Kembali ke Produk
+      </button>
 
-      {/* Carousel Foto */}
-      <Swiper spaceBetween={10} slidesPerView={1}>
-        {(produk.foto && produk.foto.length > 0) ? (
-          produk.foto.map((img, index) => (
-            <SwiperSlide key={index}>
-              <img
-                src={img}
-                alt={`Foto ${index + 1}`}
-                className="w-full h-60 object-cover rounded shadow mb-4"
-              />
+      {/* Judul */}
+      <h2 className="text-3xl font-bold text-[#35467e] mb-6 text-center">
+        {produk.merek} {produk.tipe}
+      </h2>
+
+      {/* Swiper */}
+      <div className="rounded-lg overflow-hidden shadow mb-6">
+        <Swiper
+          modules={[Navigation, Pagination, Autoplay]}
+          spaceBetween={10}
+          slidesPerView={1}
+          navigation
+          pagination={{ clickable: true }}
+          autoplay={{ delay: 3000 }}
+        >
+          {produk.foto && produk.foto.length > 0 ? (
+            produk.foto.map((img, index) => (
+              <SwiperSlide key={index}>
+                <img
+                  src={img}
+                  alt={`Foto ${index + 1}`}
+                  className="w-full h-[400px] object-cover"
+                />
+              </SwiperSlide>
+            ))
+          ) : (
+            <SwiperSlide>
+              <div className="w-full h-[400px] flex items-center justify-center bg-gray-200 text-gray-500">
+                Tidak ada foto tersedia
+              </div>
             </SwiperSlide>
-          ))
-        ) : (
-          <SwiperSlide>
-            <div className="w-full h-60 flex items-center justify-center bg-gray-100 rounded shadow mb-4 text-gray-500">
-              Tidak ada foto tersedia
-            </div>
-          </SwiperSlide>
-        )}
-      </Swiper>
+          )}
+        </Swiper>
+      </div>
 
-      {/* Detail Informasi */}
-      <p><strong>Tahun:</strong> {produk.tahun}</p>
-      <p><strong>Spesifikasi:</strong> {produk.spesifikasi}</p>
-      <p><strong>Keterangan:</strong> {produk.keterangan}</p>
-      <p><strong>Status:</strong> {produk.status}</p>
-      <p className="text-lg font-semibold mt-2">
-        Harga: <span className="text-green-500">Rp {new Intl.NumberFormat('id-ID').format(Number(produk.harga))}</span>
-      </p>
+      {/* Detail Produk */}
+      <div className="space-y-3 bg-white rounded-xl shadow px-6 py-6">
+        <p><span className="font-semibold">Tahun:</span> {produk.tahun}</p>
+        <p><span className="font-semibold">Spesifikasi:</span> {produk.spesifikasi}</p>
+        <p><span className="font-semibold">Keterangan:</span> {produk.keterangan}</p>
+        <p><span className="font-semibold">Status:</span> {produk.status}</p>
+        <p className="text-lg font-bold text-green-600">
+          Harga: Rp {new Intl.NumberFormat('id-ID').format(Number(produk.harga))}
+        </p>
+      </div>
+<Footer />
     </div>
   );
 };

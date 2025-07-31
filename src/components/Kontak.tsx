@@ -1,5 +1,4 @@
 import React from 'react';
-import Navbar from '../components/Navbar';
 import {
   FaWhatsapp,
   FaMapMarkerAlt,
@@ -9,8 +8,8 @@ import {
 
 const KontakComponent: React.FC = () => {
   return (
-      <div className=" mx-auto px-5 w-full  text-gray-800 bg-white">
-      <h1 className="text-3xl font-bold mb-4 text-blue-800">Hubungi Kami</h1>
+      <div className="mx-auto px-5 w-full  bg-[#8d9bd1] text-white">
+      <h1 className="text-xl font-bold mb-4 text-blue-800">Hubungi Kami</h1>
 
       <div className="space-y-4 text-base">
         <div className="flex items-center">
@@ -41,7 +40,7 @@ const KontakComponent: React.FC = () => {
         </div>
       </div>
 
-      <div className="mt-6">
+      {/* <div className="mt-6">
         <div className="aspect-[4/3] w-full mt-6">
   <iframe
     src="https://www.google.com/maps/embed?pb=..."
@@ -53,7 +52,7 @@ const KontakComponent: React.FC = () => {
   />
 </div>
 
-      </div>
+      </div> */}
     </div>
   );
 };

@@ -1,92 +1,72 @@
-import { Link } from 'react-router-dom';
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import { Link } from 'react-router-dom';
 
-interface ProdukView {
+interface Foto {
+  id: number;
+  url: string;
+  mobil_id: number;
+}
+
+interface Mobil {
   id: number;
   merek: string;
   tipe: string;
   harga: string;
   tahun: string;
-  spesifikasi: string;
-  keterangan: string;
-  status: string;
-  foto: string;
+  foto: Foto[]; // relasi array foto
 }
 
 const ProdukList: React.FC = () => {
-  const [produkv, setProdukv] = useState<ProdukView[]>([]);
-  const [error, setError] = useState<string | null>(null);
+  const [mobilList, setMobilList] = useState<Mobil[]>([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    axios
-      .get('https://api-dealer-car-production.up.railway.app/mobil')
-      .then((res) => {
-        const responseData = res.data;
-        if (Array.isArray(responseData.data)) {
-          setProdukv(responseData.data);
-        } else {
-          console.error("Isi 'data' bukan array:", responseData);
-          setError('Format data tidak sesuai.');
-        }
-      })
-      .catch((err) => {
-        console.error('Gagal fetch data:', err);
-        setError('Gagal memuat produk😓.');
-      });
+    const fetchMobil = async () => {
+      try {
+        const response = await axios.get('https://api-dealer-car-production.up.railway.app/mobil');
+        setMobilList(response.data.data);
+        setLoading(false);
+      } catch (error) {
+        console.error('Gagal fetch data mobil:', error);
+        setLoading(false);
+      }
+    };
+
+    fetchMobil();
   }, []);
 
-  if (error) {
-    return (
-      <div className="p-4 text-red-600">
-        <p>{error}</p>
-      </div>
-    );
+  if (loading) {
+    return <p className="text-center mt-10 text-gray-500">Loading data mobil...</p>;
   }
 
   return (
-    <div className="grid grid-cols-2 md:grid-cols-3  lg:grid-cols-4 gap-4 p-4 text-black font-medium bg-gray-300">
-      {produkv.map((item) => (
-        <div
-          key={item.id}
-          className="relative border rounded p-3  bg-white shadow"
-        >
-          {/* Status badge as popup on top-left */}
-          <div className="absolute top-2 left-2 bg-gradient-to-br bg-[#3754b1]  text-white text-xs font-semibold px-2 py-1 rounded-md shadow">
-            {item.status}
-          </div>
+    <div className="grid grid-cols-1 md:grid-cols-3 gap-6 p-4">
+      {mobilList.map((mobil) => (
+        <div key={mobil.id} className="bg-white rounded-xl shadow-md overflow-hidden">
+          {/* Cek jika ada foto, tampilkan hanya foto[0].url */}
+          {mobil.foto && mobil.foto.length > 0 ? (
+            <img
+              src={mobil.foto[0].url}
+              alt={`${mobil.merek} ${mobil.tipe}`}
+              className="w-full h-48 object-cover"
+            />
+          ) : (
+            <div className="w-full h-48 bg-gray-200 flex items-center justify-center text-gray-500">
+              Tidak ada foto
+            </div>
+          )}
 
-          {/* Main content */}
-          <img
-            src={`https://api-dealer-car-production.up.railway.app/uploads/${item.foto.filename}`}
-            alt={item.tipe}
-            className="w-full h-40 object-cover mb-2 rounded"
-          />
-
-          <h3 className="font-semibold">
-            {item.merek} {item.tipe}
-          </h3>
-          <div className=" space-y-1 mt-2">
-            <p>Tahun: {item.tahun}</p>
-            <p>Spesifikasi: {item.spesifikasi}</p>
-            <p>Keterangan: {item.keterangan}</p>
-          </div>
-          <p>Harga: Rp {item.harga}</p>
-          <div className="flex flex-row mt-5 text-white">
-            <Link to={`/produk/${item.id}`}>
-              <button className="bg-[#5266a9] rounded-md w-28 py-1 text-sm">
-                Lihat detail
-              </button>
-            </Link>
-            <a
-              href={`https://wa.me/6281234567890?text=Halo,%20saya%20tertarik%20dengan%20mobil%20${encodeURIComponent(item.merek)}%20${encodeURIComponent(item.tipe)}`}
-              target="_blank"
-              rel="noopener noreferrer"
+          <div className="p-4">
+            <h2 className="text-lg font-semibold">{mobil.merek} {mobil.tipe}</h2>
+            <p className="text-sm text-gray-600 mb-1">Tahun: {mobil.tahun}</p>
+            <p className="text-sm text-gray-800 font-medium">Rp {mobil.harga}</p>
+            <Link
+              to={`/produk/${mobil.id}`}
+              className="inline-block mt-3 text-blue-600 hover:underline text-sm"
             >
-              <button className="bg-[#35467e] rounded-md w-24 mx-5 py-1 text-sm">
-                Hubungi
-              </button>
-            </a>
+              Lihat Detail
+            </Link>
           </div>
         </div>
       ))}
