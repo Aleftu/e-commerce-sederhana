@@ -2,18 +2,19 @@ import { Link } from 'react-router-dom';
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 
-interface ProdukView {
+interface Mobil {
   id: number;
   merek: string;
   tipe: string;
   harga: string;
   tahun: string;
-  spesifikasi: string;
-  keterangan: string;
-  status: string;
-  foto: {
-    filename: string;
-  };
+  foto: Foto[];
+}
+
+interface Foto {
+  id: number;
+  url: string;
+  mobil_id: number;
 }
 
 const ProdukPrev: React.FC = () => {
@@ -22,22 +23,16 @@ const ProdukPrev: React.FC = () => {
   const [loading, setLoading] = useState(true); // 👈 Tambahkan loading state
 
   useEffect(() => {
-    axios
-      .get('https://api-dealer-car-production.up.railway.app/mobil')
-      .then((res) => {
-        const responseData = res.data;
-        if (Array.isArray(responseData.data)) {
-          setProdukPrev(responseData.data.slice(0, 6));
-        } else {
-          setError('Format data tidak sesuai.');
-        }
-      })
-      .catch(() => {
-        setError('Gagal memuat produk😓.');
-      })
-      .finally(() => {
-        setLoading(false); 
-      });
+   const fetchMobil = async () => {
+    try {
+      const response = await axios.get('https://api-dealer-car-production.up.railway.app/mobil');
+      setProdukPrev(response.data.data.slice(0, 6));
+      setLoading(false);
+    }catch (error){
+    setLoading(false);
+   }};
+
+   fetchMobil();
   }, []);
 
   // Tampilkan pesan error jika ada
@@ -74,23 +69,26 @@ const ProdukPrev: React.FC = () => {
               </div>
 
               {/* Gambar */}
+              {item.foto && item.foto.length > 0 ? (
               <img
-                src={`https://api-dealer-car-production.up.railway.app/uploads/${item.foto.filename}`}
-                alt={item.tipe}
+                src={item.foto[0].url}
+                alt={`${item.merek} ${item.tipe}`}
                 className="w-full h-40 object-cover mb-2 rounded"
-                onError={(e) => (e.currentTarget.src = '/fallback.jpg')} // Optional fallback
               />
+              ) : (
+                 <div className="w-full h-40 bg-gray-200 flex items-center justify-center text-gray-500">
+                Tidak ada foto
+              </div>
+              )}
 
               {/* Info produk */}
               <h3 className="font-semibold">
                 {item.merek} {item.tipe}
               </h3>
               <div className="space-y-1 mt-2 text-sm">
-                <p>{item.tahun}</p>
-                <p>{item.spesifikasi}</p>
-                <p>{item.keterangan}</p>
+                <p>tahun : {item.tahun}</p>
               </div>
-              <p className="mt-2 font-semibold">{item.harga}</p>
+              <p className="mt-2 font-semibold">Harga : {item.harga}</p>
 
               {/* Tombol Aksi */}
               <div className="flex flex-wrap gap-2 mt-4 text-white">
