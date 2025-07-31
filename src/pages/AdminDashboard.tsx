@@ -194,11 +194,11 @@ const AdminDashboard: React.FC = () => {
   };
 
   return (
-    <div className="flex min-h-screen bg-blue-200">
+    <div className="flex min-h-screen bg-[#8d9bd1] font-semibold">
       <Sidebar />
       <div className="flex-1 p-6">
         <div className="mx-5 mt-8">
-          <h1 className="text-black font-semibold text-xl">Dashboard Admin</h1>
+          <h1 className="text-gray-800 font-semibold text-xl">Dashboard Admin</h1>
           <hr className="mt-2 w-44 border-black border" />
 
           <div className="mt-8 flex items-center">
@@ -232,7 +232,7 @@ const AdminDashboard: React.FC = () => {
                 setUploadModal(true);
                 setSelectedMobilId(dataMobil[0]._id || dataMobil[0].id);
               }}
-              className="ml-4 bg-green-400 hover:bg-green-400 text-white font-medium rounded-md px-4 py-2 shadow transition duration-200 flex items-center gap-2"
+              className="ml-4 bg-green-500 hover:bg-green-400 text-white font-medium rounded-md px-4 py-2 shadow transition duration-200 flex items-center gap-2"
             >
               <FiUpload className="text-lg" />
               Upload Foto
@@ -240,7 +240,7 @@ const AdminDashboard: React.FC = () => {
           </div>
 
           <div className="mt-6 overflow-x-auto font-semibold">
-            <table className="min-w-full bg-white border shadow text-black">
+            <table className="min-w-full bg-white text-black">
               <thead className="bg-[#5266a9] text-white">
                 <tr>
                   <th className="p-2">Foto</th>
@@ -256,10 +256,10 @@ const AdminDashboard: React.FC = () => {
                 {dataMobil.map((item, index) => (
                   <tr key={item._id || item.id || index} className="border-t">
                     <td className="p-2">
-                      {item.foto_url ? (
+                      {item.foto && item.foto.length > 0 ? (
                         <img
-                          src={item.foto_url}
-                          alt="Mobil"
+                          src={item.foto[0].url}
+                          alt={`${item.merk} ${item.tipe}`}
                           className="w-20 h-16 object-cover rounded"
                         />
                       ) : (
@@ -341,51 +341,58 @@ const AdminDashboard: React.FC = () => {
                   name="merk"
                   value={form.merk}
                   onChange={handleChange}
-                  className="border p-2"
+                  className="border p-2 bg-white text-black rounded"
                 />
+
                 <label>Tipe</label>
                 <input
                   name="tipe"
                   value={form.tipe}
                   onChange={handleChange}
-                  className="border p-2"
+                  className="border p-2 bg-white text-black rounded"
                 />
+
                 <label>Tahun</label>
                 <input
                   name="tahun"
                   value={form.tahun}
                   onChange={handleChange}
-                  className="border p-2"
+                  className="border p-2 bg-white text-black rounded"
                 />
+
                 <label>Harga</label>
                 <input
                   type="number"
                   name="harga"
                   value={form.harga}
                   onChange={handleChange}
-                  className="border p-2"
+                  className="border p-2 bg-white text-black rounded"
                 />
+
                 <label>Spesifikasi</label>
                 <input
                   name="spesifikasi"
                   value={form.spesifikasi}
                   onChange={handleChange}
-                  className="border p-2"
+                  className="border p-2 bg-white text-black rounded"
                 />
+
                 <label>Keterangan</label>
                 <input
                   name="keterangan"
                   value={form.keterangan}
                   onChange={handleChange}
-                  className="border p-2"
+                  className="border p-2 bg-white text-black rounded"
                 />
+
                 <label>Status</label>
                 <input
                   name="status"
                   value={form.status}
                   onChange={handleChange}
-                  className="border p-2"
+                  className="border p-2 bg-white text-black rounded"
                 />
+
                 <button
                   type="submit"
                   className="bg-[#35467e] hover:bg-[#3851a3] text-white p-2 rounded"
@@ -393,6 +400,7 @@ const AdminDashboard: React.FC = () => {
                   {isEditing ? 'Simpan Perubahan' : 'Upload Produk'}
                 </button>
               </form>
+
               <button
                 onClick={() => setIsModal(false)}
                 className="mt-4 text-red-500 hover:underline"
@@ -450,9 +458,7 @@ const AdminDashboard: React.FC = () => {
                       error.response?.data || error.message
                     );
                     toast.error(
-                      `Gagal mengupload foto: ${
-                        error.response?.data?.message || 'Terjadi kesalahan'
-                      }`
+                      `Gagal mengupload foto: ${error.response?.data?.message || 'Terjadi kesalahan'}`
                     );
                   }
                 }}
@@ -463,8 +469,9 @@ const AdminDashboard: React.FC = () => {
                   type="text"
                   value={deskripsi}
                   onChange={(e) => setDeskripsi(e.target.value)}
-                  className="border p-2"
+                  className="border p-2 bg-white text-black rounded"
                 />
+
                 <label>Foto Mobil</label>
                 <input
                   type="file"
@@ -472,8 +479,9 @@ const AdminDashboard: React.FC = () => {
                   onChange={(e) =>
                     setFoto(e.target.files ? e.target.files[0] : null)
                   }
-                  className="border p-2"
+                  className="border p-2 bg-white text-black rounded"
                 />
+
                 <button
                   type="submit"
                   className="bg-[#35467e] hover:bg-[#3851a3] text-white p-2 rounded"
@@ -481,6 +489,14 @@ const AdminDashboard: React.FC = () => {
                   Upload Foto
                 </button>
               </form>
+
+              {/* Tombol Tutup Modal */}
+              <button
+                onClick={() => setUploadModal(false)}
+                className="mt-4 w-full text-center text-red-500 hover:underline"
+              >
+                Tutup
+              </button>
             </div>
           </div>
         )}

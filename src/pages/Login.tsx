@@ -98,7 +98,7 @@ export default function Login() {
               </label>
               <input
                 type="password"
-                className="input w-full border  focus:border-[#35467e] text-sm"
+                className="input w-full  focus:border-[#35467e] text-sm"
                 placeholder="Password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}

@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
-import { FaReact } from 'react-icons/fa'; // Icon React
+import { FaReact } from 'react-icons/fa'; 
+import Loading from '../components/Loading';
 
 interface Foto {
   id: number;
@@ -40,7 +41,7 @@ const ProdukList: React.FC = () => {
   }, []);
 
   if (loading) {
-    return <p className="text-center mt-10 text-gray-500 bg-[#beccfc]">Loading Produk...</p>;
+     return <Loading />;
   }
 
   return (
@@ -84,7 +85,7 @@ const ProdukList: React.FC = () => {
               <div className="mt-4 space-x-2">
                 <Link
                   to={`/produk/${mobil.id}`}
-                  className="inline-block px-3 py-1 bg-[#6978af] text-white text-sm rounded hover:bg-blue-700"
+                  className="inline-block px-3 py-1 bg-[#6978af] text-white text-sm rounded hover:bg-[#7086d6]"
                 >
                   Lihat Detail
                 </Link>
@@ -92,8 +93,7 @@ const ProdukList: React.FC = () => {
                   href={`https://wa.me/6281234567890?text=Halo,%20saya%20tertarik%20dengan%20mobil%20${mobil.merek}%20${mobil.tipe}`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-block px-3 py-1 bg-[#374470] text-white text-sm rounded hover:bg-green-700"
-                >
+                  className="inline-block px-3 py-1 bg-[#374470] text-white text-sm rounded hover:bg-[#526091]">
                   Hubungi
                 </a>
               </div>
