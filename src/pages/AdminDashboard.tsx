@@ -82,6 +82,12 @@ const AdminDashboard: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
+    const { merk, tipe, tahun, harga, spesifikasi, keterangan, status } = form;
+    if (!merk || !tipe || !tahun || !harga || !spesifikasi || !keterangan || !status) {
+      toast.error('Semua field harus diisi!');
+      return;
+    }
+
     const token = localStorage.getItem('token');
     if (!token) {
       toast.error('Token tidak ditemukan. Silakan login ulang.');
@@ -423,8 +429,8 @@ const AdminDashboard: React.FC = () => {
               <form
                 onSubmit={async (e) => {
                   e.preventDefault();
-                  if (!foto || !selectedMobilId) {
-                    toast.error('Foto atau ID mobil tidak valid.');
+                  if (!foto || !selectedMobilId || !deskripsi.trim()) {
+                    toast.error('Pilih mobil, foto, dan deskripsi terlebih dahulu!');
                     return;
                   }
                   const formData = new FormData();
