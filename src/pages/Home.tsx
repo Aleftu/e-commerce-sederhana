@@ -9,13 +9,24 @@ import Footer from '../components/Footer';
 const HomePage = () => {
   const [loading, setLoading] = useState(true);
 
-  // Simulasi delay loading 2 detik
   useEffect(() => {
     const timer = setTimeout(() => {
       setLoading(false);
     }, 2000);
-
     return () => clearTimeout(timer);
+  }, []);
+
+  // Scroll ke hash jika ada (misal dari /#produk-preview)
+  useEffect(() => {
+    const hash = window.location.hash;
+    if (hash) {
+      const el = document.querySelector(hash);
+      if (el) {
+        setTimeout(() => {
+          el.scrollIntoView({ behavior: 'smooth' });
+        }, 200);
+      }
+    }
   }, []);
 
   if (loading) {
@@ -32,18 +43,18 @@ const HomePage = () => {
         <h1 className="text-center mt-1 font-semibold text-lg">
           Daftar Produk
         </h1>
-
-        <div className="mb-10 card rounded-md bg-[#beccfc] mt-3 ">
-          <ProdukPrev />
+        <div className="mb-7 card rounded-md mt-3">
+          <section id="produk-preview" className="mt-12">
+            <ProdukPrev />
+          </section>
         </div>
 
         {/* Kontak Section */}
-        <div className="bg-[#8d9bd1] relative z-10">
+        <div id="kontak" className="bg-[#8d9bd1] relative z-10 mb-5">
           <h1 className="mb-5 text-center mt-5 font-semibold text-xl">
             Informasi Kontak
           </h1>
-
-          <div className="mb-5 card rounded-md mt-3">
+          <div className="mb-5 card rounded-md mt-3 bg-[#8d9bd1] pb-5">
             <KontakComponent />
           </div>
         </div>

@@ -23,16 +23,19 @@ const ProdukPrev: React.FC = () => {
   const [loading, setLoading] = useState(true); // 👈 Tambahkan loading state
 
   useEffect(() => {
-   const fetchMobil = async () => {
-    try {
-      const response = await axios.get('https://api-dealer-car-production.up.railway.app/mobil');
-      setProdukPrev(response.data.data.slice(0, 6));
-      setLoading(false);
-    }catch (error){
-    setLoading(false);
-   }};
+    const fetchMobil = async () => {
+      try {
+        const response = await axios.get(
+          'https://api-dealer-car-production.up.railway.app/mobil'
+        );
+        setProdukPrev(response.data.data);
+        setLoading(false);
+      } catch (error) {
+        setLoading(false);
+      }
+    };
 
-   fetchMobil();
+    fetchMobil();
   }, []);
 
   // Tampilkan pesan error jika ada
@@ -61,7 +64,7 @@ const ProdukPrev: React.FC = () => {
           {produkprev.map((item) => (
             <div
               key={item.id}
-              className="relative border rounded p-3 bg-white shadow max-w-full"
+              className="relative border rounded p-2 bg-white shadow-md w-full text-sm"
             >
               {/* Status badge */}
               <div className="absolute top-2 left-2 bg-[#5b6aa9] text-white text-xs font-bold px-2 py-1 rounded-md shadow">
@@ -69,17 +72,17 @@ const ProdukPrev: React.FC = () => {
               </div>
 
               {/* Gambar */}
-              {item.foto && item.foto.length > 0 ? (
-              <img
-                src={item.foto[0].url}
-                alt={`${item.merek} ${item.tipe}`}
-                className="w-full h-40 object-cover mb-2 rounded"
-              />
-              ) : (
-                 <div className="w-full h-40 bg-gray-200 flex items-center justify-center text-gray-500">
-                Tidak ada foto
+              <div className="w-full aspect-[4/3] bg-gray-100 mb-2 rounded overflow-hidden flex items-center justify-center">
+                {item.foto && item.foto.length > 0 ? (
+                  <img
+                    src={item.foto[0].url}
+                    alt={`${item.merek} ${item.tipe}`}
+                    className="w-full h-full object-cover"
+                  />
+                ) : (
+                  <span className="text-gray-500 text-sm">Tidak ada foto</span>
+                )}
               </div>
-              )}
 
               {/* Info produk */}
               <h3 className="font-semibold">
@@ -114,13 +117,13 @@ const ProdukPrev: React.FC = () => {
         </div>
 
         {/* Tombol Lihat Lebih Banyak */}
-        <div className="text-center mt-6">
+        {/* <div className="text-center mt-6">
           <Link to="/list-produk">
             <button className="bg-[#52639e] text-white px-6 py-2 rounded-md hover:bg-[#2c3b69] transition">
               Lihat Lebih Banyak
             </button>
           </Link>
-        </div>
+        </div> */}
       </div>
     </div>
   );

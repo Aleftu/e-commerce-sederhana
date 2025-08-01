@@ -4,7 +4,6 @@ import Sidebar from '../components/Sidebar';
 import { toast, ToastContainer } from 'react-toastify';
 import { FiPlus, FiUpload, FiEdit, FiTrash } from 'react-icons/fi';
 import 'react-toastify/dist/ReactToastify.css';
-import { div } from 'framer-motion/client';
 
 interface FormDataProduk {
   merk: string;
@@ -213,9 +212,11 @@ const AdminDashboard: React.FC = () => {
   };
 
   return (
-    <div className="flex min-h-screen bg-[#8d9bd1] font-semibold">
-      <Sidebar />
-      <div className="flex-1 p-6">
+    <div className="flex flex-col md:flex-row min-h-screen bg-[#8d9bd1] font-semibold">
+      <div className="md:w-64 w-full ">
+        <Sidebar />
+      </div>
+      <div className="flex-1 p-4 md:p-6 overflow-x-auto">
         <div className="mx-5 mt-8">
           <h1 className="text-gray-800 font-semibold text-xl">
             Dashboard Admin
@@ -544,12 +545,11 @@ const AdminDashboard: React.FC = () => {
         <ToastContainer />
 
         {loading && (
-  <div className="fixed inset-0 bg-black bg-opacity-30 backdrop-blur-sm flex flex-col items-center justify-center z-[9999]">
-    <div className="w-16 h-16 border-4 border-[#35467e] border-t-transparent rounded-full animate-spin"></div>
-    <p className="mt-4 text-white font-semibold">Memuat...</p>
-  </div>
-)}
-
+          <div className="fixed inset-0 bg-black bg-opacity-30 backdrop-blur-sm flex flex-col items-center justify-center z-[9999]">
+            <div className="w-16 h-16 border-4 border-[#35467e] border-t-transparent rounded-full animate-spin"></div>
+            <p className="mt-4 text-white font-semibold">Memuat...</p>
+          </div>
+        )}
       </div>
     </div>
   );

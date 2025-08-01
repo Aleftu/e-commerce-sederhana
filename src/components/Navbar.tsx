@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
 
 const Navbar = () => {
   const [scroll, setScroll] = useState(false);
@@ -8,13 +7,17 @@ const Navbar = () => {
     const handleScroll = () => {
       setScroll(window.scrollY > 50);
     };
-
     window.addEventListener("scroll", handleScroll);
-
-    return () => {
-      window.removeEventListener("scroll", handleScroll);
-    };
+    return () => window.removeEventListener("scroll", handleScroll);
   }, []);
+
+  const scrollToProduk = () => {
+    const el = document.getElementById("produk-preview");
+    if (el) {
+      el.scrollIntoView({ behavior: "smooth" });
+    }
+  };
+
   return (
     <div
       className={`navbar sticky top-0 z-50 shadow transition-colors duration-300 ${
@@ -24,34 +27,33 @@ const Navbar = () => {
       <div className="navbar-start">
         <div className="dropdown">
           <label
-  tabIndex={0}
-  className="btn btn-ghost lg:hidden bg-transparent hover:bg-[#5d7ea7] hover:text-white border-none"
->
-  ☰
-</label>
-
+            tabIndex={0}
+            className="btn btn-ghost lg:hidden bg-transparent hover:bg-[#5d7ea7] hover:text-white border-none"
+          >
+            ☰
+          </label>
           <ul
             tabIndex={0}
             className="menu menu-md dropdown-content mt-3 z-[1] p-2 shadow-md bg-slate-300 text-black rounded-box w-52"
           >
-            <li><Link to="/">Beranda</Link></li>
-            <li><Link to="/list-produk">Produk</Link></li>
-            <li><Link to="/kontak">Kontak</Link></li>
+            <li><a href="#">Beranda</a></li>
+            <li><button onClick={scrollToProduk}>Produk</button></li>
+            <li><a href="#kontak">Kontak</a></li>
           </ul>
         </div>
-        <Link
-          to="/"
+        <a
+          href="#"
           className="mx-5 text-xl font-extrabold first-letter:text-[#567af3] first-letter:text-3xl"
         >
           45Motor
-        </Link>
+        </a>
       </div>
 
       <div className="navbar-end hidden lg:flex">
         <ul className="menu menu-horizontal px-1 text-xl">
-          <li><Link to="/">Beranda</Link></li>
-          <li><Link to="/list-produk">Produk</Link></li>
-          <li><Link to="/kontak">Kontak</Link></li>
+          <li><a href="#">Beranda</a></li>
+          <li><button onClick={scrollToProduk}>Produk</button></li>
+          <li><a href="#kontak">Kontak</a></li>
         </ul>
       </div>
     </div>

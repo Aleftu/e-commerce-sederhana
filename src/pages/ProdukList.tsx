@@ -16,6 +16,7 @@ interface Mobil {
   tipe: string;
   harga: string;
   tahun: string;
+  status: string;
   foto: Foto[];
 }
 
@@ -75,6 +76,11 @@ const ProdukList: React.FC = () => {
                 Tidak ada foto
               </div>
             )}
+
+             {/* Status badge */}
+              <div className="absolute top-2 left-2 bg-[#5b6aa9] text-white text-xs font-bold px-2 py-1 rounded-md shadow">
+                {mobil.status}
+              </div>
 
             <div className="p-4">
               <h2 className="text-lg font-semibold">{mobil.merek} {mobil.tipe}</h2>
