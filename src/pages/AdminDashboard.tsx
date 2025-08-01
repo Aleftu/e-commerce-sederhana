@@ -4,6 +4,7 @@ import Sidebar from '../components/Sidebar';
 import { toast, ToastContainer } from 'react-toastify';
 import { FiPlus, FiUpload, FiEdit, FiTrash } from 'react-icons/fi';
 import 'react-toastify/dist/ReactToastify.css';
+import { div } from 'framer-motion/client';
 
 interface FormDataProduk {
   merk: string;
@@ -32,6 +33,7 @@ const AdminDashboard: React.FC = () => {
   const [editId, setEditId] = useState<string | null>(null);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [deleteId, setDeleteId] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
 
   // State for photo upload
   const [uploadModal, setUploadModal] = useState(false);
@@ -81,9 +83,18 @@ const AdminDashboard: React.FC = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setLoading(true);
 
     const { merk, tipe, tahun, harga, spesifikasi, keterangan, status } = form;
-    if (!merk || !tipe || !tahun || !harga || !spesifikasi || !keterangan || !status) {
+    if (
+      !merk ||
+      !tipe ||
+      !tahun ||
+      !harga ||
+      !spesifikasi ||
+      !keterangan ||
+      !status
+    ) {
       toast.error('Semua field harus diisi!');
       return;
     }
@@ -139,6 +150,8 @@ const AdminDashboard: React.FC = () => {
       toast.error(
         `Gagal: ${error.response?.data?.message || 'Terjadi kesalahan'}`
       );
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -430,7 +443,9 @@ const AdminDashboard: React.FC = () => {
                 onSubmit={async (e) => {
                   e.preventDefault();
                   if (!foto || !selectedMobilId || !deskripsi.trim()) {
-                    toast.error('Pilih mobil, foto, dan deskripsi terlebih dahulu!');
+                    toast.error(
+                      'Pilih mobil, foto, dan deskripsi terlebih dahulu!'
+                    );
                     return;
                   }
                   const formData = new FormData();
@@ -507,7 +522,7 @@ const AdminDashboard: React.FC = () => {
                   }
                   className="border p-2 bg-white text-black rounded"
                 />
- 
+
                 <button
                   type="submit"
                   className="bg-[#35467e] hover:bg-[#3851a3] text-white p-2 rounded"
@@ -527,6 +542,14 @@ const AdminDashboard: React.FC = () => {
         )}
 
         <ToastContainer />
+
+        {loading && (
+  <div className="fixed inset-0 bg-black bg-opacity-30 backdrop-blur-sm flex flex-col items-center justify-center z-[9999]">
+    <div className="w-16 h-16 border-4 border-[#35467e] border-t-transparent rounded-full animate-spin"></div>
+    <p className="mt-4 text-white font-semibold">Memuat...</p>
+  </div>
+)}
+
       </div>
     </div>
   );
