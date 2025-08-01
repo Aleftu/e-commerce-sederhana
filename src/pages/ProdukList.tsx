@@ -105,4 +105,4 @@ const ProdukList: React.FC = () => {
   );
 };
 
-export default ProdukList;
+export default ProdukList; 

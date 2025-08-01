@@ -198,7 +198,9 @@ const AdminDashboard: React.FC = () => {
       <Sidebar />
       <div className="flex-1 p-6">
         <div className="mx-5 mt-8">
-          <h1 className="text-gray-800 font-semibold text-xl">Dashboard Admin</h1>
+          <h1 className="text-gray-800 font-semibold text-xl">
+            Dashboard Admin
+          </h1>
           <hr className="mt-2 w-44 border-black border" />
 
           <div className="mt-8 flex items-center">
@@ -464,6 +466,24 @@ const AdminDashboard: React.FC = () => {
                 }}
                 className="grid gap-3"
               >
+                {/* Tambahan untuk pilih mobil */}
+                <label>Pilih Mobil</label>
+                <select
+                  onChange={(e) => setSelectedMobilId(e.target.value)}
+                  value={selectedMobilId || ''}
+                  className="border p-2 bg-white text-black rounded"
+                >
+                  <option value="">-- Pilih Mobil --</option>
+                  {dataMobil.map((mobil) => (
+                    <option
+                      key={mobil._id || mobil.id}
+                      value={mobil._id || mobil.id}
+                    >
+                      {mobil.merk} - {mobil.tipe}
+                    </option>
+                  ))}
+                </select>
+
                 <label>Deskripsi Foto</label>
                 <input
                   type="text"
@@ -481,7 +501,7 @@ const AdminDashboard: React.FC = () => {
                   }
                   className="border p-2 bg-white text-black rounded"
                 />
-
+ 
                 <button
                   type="submit"
                   className="bg-[#35467e] hover:bg-[#3851a3] text-white p-2 rounded"
@@ -490,7 +510,6 @@ const AdminDashboard: React.FC = () => {
                 </button>
               </form>
 
-              {/* Tombol Tutup Modal */}
               <button
                 onClick={() => setUploadModal(false)}
                 className="mt-4 w-full text-center text-red-500 hover:underline"
