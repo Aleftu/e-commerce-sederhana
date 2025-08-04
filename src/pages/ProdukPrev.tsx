@@ -60,7 +60,7 @@ const ProdukPrev: React.FC = () => {
   return (
     <div className="bg-[#808dc4] py-4">
       <div className="max-w-screen-xl mx-auto px-4 overflow-x-hidden">
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 text-black font-medium">
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 text-black font-medium">
           {produkprev.map((item) => (
             <div
               key={item.id}
@@ -94,24 +94,27 @@ const ProdukPrev: React.FC = () => {
               <p className="mt-2 font-semibold">Harga : {item.harga}</p>
 
               {/* Tombol Aksi */}
-              <div className="flex flex-wrap gap-2 mt-4 text-white">
-                <Link
-                  to={`/produk/${item.id}`}
-                  className="bg-[#6978af] rounded-md w-28 py-1 text-sm text-center"
-                >
-                  Lihat detail
-                </Link>
-                <a
-                  href={`https://wa.me/6281234567890?text=Halo,%20saya%20tertarik%20dengan%20mobil%20${encodeURIComponent(
-                    item.merek
-                  )}%20${encodeURIComponent(item.tipe)}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="bg-[#374470] rounded-md w-24 py-1 text-sm text-center"
-                >
-                  Hubungi
-                </a>
-              </div>
+              <div className="flex flex-col md:flex-row gap-2 mt-4 text-white sm:mx-auto">
+  <Link
+    to={`/produk/${item.id}`}
+    className="bg-[#6978af] rounded-md text-xs sm:text-sm py-1 px-3 w-full md:w-auto text-center"
+  >
+    Lihat detail
+  </Link>
+  <a
+    href={`https://wa.me/6281234567890?text=Halo,%20saya%20tertarik%20dengan%20mobil%20${encodeURIComponent(
+      item.merek
+    )}%20${encodeURIComponent(item.tipe)}`}
+    target="_blank"
+    rel="noopener noreferrer"
+    className="bg-[#374470] rounded-md text-xs sm:text-sm py-1 px-3 w-full md:w-auto text-center"
+  >
+    Hubungi
+  </a>
+</div>
+
+
+
             </div>
           ))}
         </div>
