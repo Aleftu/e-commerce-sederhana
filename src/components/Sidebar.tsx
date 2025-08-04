@@ -1,8 +1,12 @@
 import React from "react";
 import { BiUserCircle, BiLogOut } from "react-icons/bi";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 
-const Sidebar: React.FC = () => {
+interface SidebarProps {
+  onSelectMenu: (menu: 'produk' | 'foto') => void;
+}
+
+const Sidebar: React.FC<SidebarProps> = ({ onSelectMenu }) => {
   const navigate = useNavigate();
 
   const handleLogout = () => {
@@ -19,9 +23,27 @@ const Sidebar: React.FC = () => {
 
       <hr className="my-4 sm:my-6 border-gray-300 opacity-30" />
 
+      {/* Tambahkan link navigasi ke halaman produk dan foto */}
+      <nav className="flex flex-col gap-2 mb-4">
+        <button
+            onClick={() => onSelectMenu('produk')}
+            className="text-left w-full text-white hover:text-blue-500"
+          >
+            Kelola Produk
+          </button>
+        
+          <button
+            onClick={() => onSelectMenu('foto')}
+            className="text-left w-full text-white hover:text-blue-500"
+          >
+            Kelola Foto
+          </button>
+        
+      </nav>
+
       <button
         onClick={handleLogout}
-        className=" flex items-center justify-center gap-2 py-2 px-4 bg-red-500 hover:bg-red-600 text-white rounded-md transition duration-200 md:w-28 lg:w-full sm:justify-center"
+        className="flex items-center justify-center gap-2 py-2 px-4 bg-red-500 hover:bg-red-600 text-white rounded-md transition duration-200 md:w-28 lg:w-full sm:justify-center"
       >
         <BiLogOut size={20} />
         Logout

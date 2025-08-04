@@ -24,6 +24,7 @@ function AppContent() {
         <Route path="/list-produk" element={<ProdukList />} />
         <Route path="/produk/:id" element={<ProdukDetail />} />
         <Route path="/dashboard" element={<AdminDashboard />} />
+    
         <Route path="/kontak" element={<Kontak />} />
       </Routes>
     </div>
