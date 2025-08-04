@@ -8,7 +8,7 @@ import {
 
 const KontakComponent: React.FC = () => {
   return (
-      <div className="mx-auto px-5 w-full  bg-[#8d9bd1] text-white">
+      <div className="mx-auto px-5 w-full  bg-[#808dc4] text-white">
       <h1 className="text-xl font-bold mb-4 text-blue-800">Hubungi Kami</h1>
 
       <div className="space-y-4 text-base">
