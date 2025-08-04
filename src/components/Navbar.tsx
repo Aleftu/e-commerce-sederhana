@@ -28,7 +28,7 @@ const Navbar = () => {
         <div className="dropdown">
           <label
             tabIndex={0}
-            className="btn btn-ghost lg:hidden bg-transparent hover:bg-[#5d7ea7] hover:text-white border-none"
+            className="btn btn-ghost lg:hidden bg-transparent hover:bg-[#6a79bd] hover:text-white border-none"
           >
             ☰
           </label>
