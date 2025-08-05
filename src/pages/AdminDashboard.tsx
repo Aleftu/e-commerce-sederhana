@@ -215,6 +215,16 @@ const AdminDashboard: React.FC = () => {
     setShowDeleteModal(false);
   };
 
+  //buat pagination
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 10;
+
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentItems = dataMobil.slice(indexOfFirstItem, indexOfLastItem);
+
+  const totalPages = Math.ceil(dataMobil.length / itemsPerPage);
+
   return (
     <div className="flex flex-col md:flex-row min-h-screen bg-[#8d9bd1] font-semibold">
       <div className="md:w-64 w-full ">
@@ -287,12 +297,12 @@ const AdminDashboard: React.FC = () => {
                     </tr>
                   </thead>
                   <tbody>
-                    {dataMobil.map((item, index) => (
+                    {currentItems.map((item, index) => (
                       <tr
                         key={item._id || item.id || index}
                         className="border-t"
                       >
-                        <td className="p-2">{index + 1}</td>
+                        <td className="p-2">{indexOfFirstItem + index + 1}</td>
                         <td className="p-2">
                           {item.foto && item.foto.length > 0 ? (
                             <img
@@ -312,7 +322,7 @@ const AdminDashboard: React.FC = () => {
                         <td className="p-2 flex gap-2">
                           <button
                             onClick={() => handleEdit(item)}
-                            className="bg-yellow-500 text-white px-3 py-1 rounded"
+                            className="bg-yellow-500 text-white px-2 py-1 rounded"
                           >
                             <FiEdit className="inline" />
                           </button>
@@ -326,7 +336,7 @@ const AdminDashboard: React.FC = () => {
                               setDeleteId(id);
                               setShowDeleteModal(true);
                             }}
-                            className="bg-red-600 text-white px-3 py-1 rounded"
+                            className="bg-red-600 text-white px-2 py-1 rounded"
                           >
                             <FiTrash />
                           </button>
@@ -335,6 +345,19 @@ const AdminDashboard: React.FC = () => {
                     ))}
                   </tbody>
                 </table>
+
+                {/* {pagination} */}
+                <div className="flex justify-center mt-4 gap-2">
+                  {Array.from({ length: totalPages }, (_, i) => (
+                    <button
+                      key={i}
+                      onClick={() => setCurrentPage(i + 1)}
+                      className={`px-3 py-1 rounded ${currentPage === i + 1 ? 'bg-[#5266a9] text-white' : 'bg-white text-black border'}`}
+                    >
+                      {i + 1}
+                    </button>
+                  ))}
+                </div>
               </div>
             </div>
           )}
@@ -424,12 +447,16 @@ const AdminDashboard: React.FC = () => {
                   />
 
                   <label>Status</label>
-                  <input
+                  <select
                     name="status"
                     value={form.status}
                     onChange={handleChange}
-                    className="border p-2 bg-white text-black rounded"
-                  />
+                    className="border p-2 bg-white text-black rounded font-semibold"
+                  >
+                    <option value="">-- Pilih Status --</option>
+                    <option value="Available">Available</option>
+                    <option value="Sold">Sold</option>
+                  </select>
 
                   <button
                     type="submit"

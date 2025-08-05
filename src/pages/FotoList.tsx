@@ -25,6 +25,8 @@ const FotoList: React.FC = () => {
   const [selectedMobilId, setSelectedMobilId] = useState('');
   const [editingId, setEditingId] = useState<string | null>(null);
   const [showModal, setShowModal] = useState(false);
+  const [loadingSubmit, setLoadingSubmit] = useState(false);
+  const [loadingDelete, setLoadingDelete] = useState(false);
 
   // Modal konfirmasi hapus
   const [confirmDeleteId, setConfirmDeleteId] = useState<string | null>(null);
@@ -79,63 +81,68 @@ const FotoList: React.FC = () => {
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
-  e.preventDefault();
-  const token = localStorage.getItem('token');
-  if (!token) return toast.error('Token tidak ditemukan.');
+    e.preventDefault();
+    const token = localStorage.getItem('token');
+    if (!token) return toast.error('Token tidak ditemukan.');
 
-  if (!deskripsi || !selectedMobilId || (!file && !editingId)) {
-    return toast.error('Semua field wajib diisi.');
-  }
+    if (!deskripsi || !selectedMobilId || (!file && !editingId)) {
+      return toast.error('Semua field wajib diisi.');
+    }
+    setLoadingSubmit(true);
 
-  try {
-    if (editingId) {
-      const formData = new FormData();
-      formData.append('deskripsi', deskripsi);
-      formData.append('id_mobil', selectedMobilId);
-      if (file) {
-        formData.append('foto', file); // harus "foto" sesuai backend
+    try {
+      if (editingId) {
+        const formData = new FormData();
+        formData.append('deskripsi', deskripsi);
+        formData.append('id_mobil', selectedMobilId);
+        if (file) {
+          formData.append('foto', file); // harus "foto" sesuai backend
+        }
+
+        await axios.put(
+          `https://api-dealer-car-production.up.railway.app/upload/${editingId}`,
+          formData,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+              'Content-Type': 'multipart/form-data',
+            },
+          }
+        );
+
+        toast.success('Data foto berhasil diupdate.');
+      } else {
+        const formData = new FormData();
+        formData.append('foto', file!); // nama field harus "foto"
+        formData.append('deskripsi', deskripsi);
+        formData.append('id_mobil', selectedMobilId);
+
+        await axios.post(
+          'https://api-dealer-car-production.up.railway.app/upload',
+          formData,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+              'Content-Type': 'multipart/form-data',
+            },
+          }
+        );
+
+        toast.success('Foto berhasil diupload.');
       }
 
-      await axios.put(
-        `https://api-dealer-car-production.up.railway.app/upload/${editingId}`,
-        formData,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            'Content-Type': 'multipart/form-data',
-          },
-        }
+      closeModal();
+      fetchFoto();
+    } catch (error: any) {
+      console.error(
+        '❌ Error saat simpan:',
+        error.response?.data || error.message
       );
-
-      toast.success('Data foto berhasil diupdate.');
-    } else {
-      const formData = new FormData();
-      formData.append('foto', file!); // nama field harus "foto"
-      formData.append('deskripsi', deskripsi);
-      formData.append('id_mobil', selectedMobilId);
-
-      await axios.post(
-        'https://api-dealer-car-production.up.railway.app/upload',
-        formData,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            'Content-Type': 'multipart/form-data',
-          },
-        }
-      );
-
-      toast.success('Foto berhasil diupload.');
+      toast.error('Gagal menyimpan data.');
+    } finally {
+      setLoadingSubmit(false);
     }
-
-    closeModal();
-    fetchFoto();
-  } catch (error: any) {
-    console.error('❌ Error saat simpan:', error.response?.data || error.message);
-    toast.error('Gagal menyimpan data.');
-  }
-};
-
+  };
 
   const handleEdit = (foto: Foto) => {
     setEditingId(foto.id.toString());
@@ -150,24 +157,25 @@ const FotoList: React.FC = () => {
   };
 
   const handleDeleteConfirmed = async () => {
-  const token = localStorage.getItem('token');
-  if (!token || !confirmDeleteId) return;
-
-  try {
-    await axios.delete(
-      `https://api-dealer-car-production.up.railway.app/foto/${confirmDeleteId}`, //aku gak tau end poinnya benr atau slah(kamu bisa ganti disini kalo aku slh)
-      {
-        headers: { Authorization: `Bearer ${token}` },
-      }
-    );
-    toast.success('Foto berhasil dihapus.');
-    setConfirmDeleteId(null);
-    fetchFoto();
-  } catch {
-    toast.error('Gagal menghapus foto.');
-  }
-};
-
+    const token = localStorage.getItem('token');
+    if (!token || !confirmDeleteId) return;
+setLoadingDelete(true);
+    try {
+      await axios.delete(
+        `https://api-dealer-car-production.up.railway.app/foto/${confirmDeleteId}`, //aku gak tau end poinnya benr atau slah(kamu bisa ganti disini kalo aku slh)
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+      toast.success('Foto berhasil dihapus.');
+      setConfirmDeleteId(null);
+      fetchFoto();
+    } catch {
+      toast.error('Gagal menghapus foto.');
+    } finally {
+      setLoadingDelete(false);
+    }
+  };
 
   return (
     <div className="px-4 sm:px-8 py-6">
@@ -237,9 +245,16 @@ const FotoList: React.FC = () => {
                 </button>
                 <button
                   type="submit"
-                  className="bg-[#5266a9] text-white px-4 py-2 rounded hover:bg-[#6078c5]"
+                  disabled={loadingSubmit}
+                  className="bg-[#5266a9] text-white px-4 py-2 rounded hover:bg-[#6078c5] disabled:opacity-50"
                 >
-                  {editingId ? 'Update' : 'Upload'}
+                  {loadingSubmit
+                    ? editingId
+                      ? 'Menyimpan...'
+                      : 'Mengupload...'
+                    : editingId
+                      ? 'Update'
+                      : 'Upload'}
                 </button>
               </div>
             </form>
@@ -248,28 +263,31 @@ const FotoList: React.FC = () => {
       )}
 
       {confirmDeleteId && (
-  <div className="fixed inset-0 bg-black bg-opacity-30 flex items-center justify-center z-50 px-4">
-    <div className="bg-white w-full max-w-sm p-6 rounded shadow text-black">
-      <h2 className="text-lg font-semibold mb-4">Konfirmasi Hapus</h2>
-      <p className="text-black">Apakah kamu yakin ingin menghapus foto ini?</p>
-      <div className="mt-4 flex justify-end gap-3">
-        <button
-          onClick={() => setConfirmDeleteId(null)}
-          className="px-4 py-2 border rounded hover:bg-gray-100 text-black"
-        >
-          Batal
-        </button>
-        <button
-          onClick={handleDeleteConfirmed}
-          className="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700"
-        >
-          Hapus
-        </button>
-      </div>
-    </div>
-  </div>
-)}
+        <div className="fixed inset-0 bg-black bg-opacity-30 flex items-center justify-center z-50 px-4">
+          <div className="bg-white w-full max-w-sm p-6 rounded shadow text-black">
+            <h2 className="text-lg font-semibold mb-4">Konfirmasi Hapus</h2>
+            <p className="text-black">
+              Apakah kamu yakin ingin menghapus foto ini?
+            </p>
+            <div className="mt-4 flex justify-end gap-3">
+              <button
+                onClick={() => setConfirmDeleteId(null)}
+                className="px-4 py-2 border rounded hover:bg-gray-100 text-black"
+              >
+                Batal
+              </button>
+              <button
+  onClick={handleDeleteConfirmed}
+  disabled={loadingDelete}
+  className="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 disabled:opacity-50"
+>
+  {loadingDelete ? 'Menghapus...' : 'Hapus'}
+</button>
 
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Tabel Foto */}
       <div className="overflow-x-auto mt-6">
@@ -316,15 +334,13 @@ const FotoList: React.FC = () => {
                     <td className="p-2 space-x-2">
                       <button
                         onClick={() => handleEdit(foto)}
-                        className=" text-yellow-500 hover:text-yellow-600"
-                        title="Edit"
+                        className=" bg-yellow-500 text-white px-3 py-1 rounded"
                       >
                         <FiEdit />
                       </button>
                       <button
                         onClick={() => confirmDelete(foto.id.toString())}
-                        className="text-red-500 hover:text-red-600"
-                        title="Hapus"
+                        className="bg-red-600 text-white px-3 py-1 rounded"
                       >
                         <FiTrash />
                       </button>
