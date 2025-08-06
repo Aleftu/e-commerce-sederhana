@@ -1,6 +1,10 @@
 import { Link } from 'react-router-dom';
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import { Swiper, SwiperSlide } from 'swiper/react';
+import 'swiper/css';
+import 'swiper/css/navigation';
+import { Navigation } from 'swiper/modules';
 
 interface Mobil {
   id: number;
@@ -9,6 +13,7 @@ interface Mobil {
   harga: string;
   tahun: string;
   foto: Foto[];
+  status: string;
 }
 
 interface Foto {
@@ -18,9 +23,9 @@ interface Foto {
 }
 
 const ProdukPrev: React.FC = () => {
-  const [produkprev, setProdukPrev] = useState<ProdukView[]>([]);
+  const [produkprev, setProdukPrev] = useState<Mobil[]>([]);
   const [error, setError] = useState<string | null>(null);
-  const [loading, setLoading] = useState(true); // 👈 Tambahkan loading state
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchMobil = async () => {
@@ -31,6 +36,7 @@ const ProdukPrev: React.FC = () => {
         setProdukPrev(response.data.data);
         setLoading(false);
       } catch (error) {
+        setError('Gagal memuat data produk.');
         setLoading(false);
       }
     };
@@ -38,16 +44,10 @@ const ProdukPrev: React.FC = () => {
     fetchMobil();
   }, []);
 
-  // Tampilkan pesan error jika ada
   if (error) {
-    return (
-      <div className="p-4 text-red-600 text-center">
-        <p>{error}</p>
-      </div>
-    );
+    return <div className="p-4 text-red-600 text-center">{error}</div>;
   }
 
-  // Tampilkan loading screen
   if (loading) {
     return (
       <div className="p-4 text-center">
@@ -56,16 +56,23 @@ const ProdukPrev: React.FC = () => {
     );
   }
 
-  // Tampilkan produk jika tidak error dan sudah selesai loading
   return (
-    <div className="bg-[#808dc4] py-4">
-      <div className="max-w-screen-xl mx-auto px-4 overflow-x-hidden">
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 text-black font-medium">
-          {produkprev.map((item) => (
-            <div
-              key={item.id}
-              className="relative border rounded p-2 bg-white shadow-md w-full text-sm"
-            >
+    <div className="rounded-md py-4 px-4">
+      <Swiper
+        spaceBetween={20}
+        slidesPerView={1.2}
+        navigation
+        modules={[Navigation]}
+        breakpoints={{
+          640: { slidesPerView: 2.2 },
+          768: { slidesPerView: 3.2 },
+          1024: { slidesPerView: 4.2 },
+        }}
+        className="text-black font-medium"
+      >
+        {produkprev.map((item) => (
+          <SwiperSlide key={item.id}>
+            <div className="relative border rounded p-2 bg-white shadow-md w-full text-sm">
               {/* Status badge */}
               <div className="absolute top-2 left-2 bg-[#5b6aa9] text-white text-xs font-bold px-2 py-1 rounded-md shadow">
                 {item.status}
@@ -91,11 +98,10 @@ const ProdukPrev: React.FC = () => {
               <div className="space-y-1 mt-2 text-sm">
                 <p>tahun : {item.tahun}</p>
               </div>
-              <p className="mt-2 font-semibold">Harga : {item.harga}</p>
+              <p className="mt-2 font-semibold text-[#fb923c]">Harga : {item.harga}</p>
 
               {/* Tombol Aksi */}
-             <div className="flex flex-col lg:flex-row gap-2 mt-4 text-white sm:mx-auto">
-
+             <div className="flex flex-row gap-2 mt-4 text-white">
                 <Link
                   to={`/produk/${item.id}`}
                   className="bg-[#6978af] rounded-md text-xs sm:text-sm py-1 px-3 w-full md:w-auto text-center"
@@ -114,18 +120,9 @@ const ProdukPrev: React.FC = () => {
                 </a>
               </div>
             </div>
-          ))}
-        </div>
-
-        {/* Tombol Lihat Lebih Banyak */}
-        {/* <div className="text-center mt-6">
-          <Link to="/list-produk">
-            <button className="bg-[#52639e] text-white px-6 py-2 rounded-md hover:bg-[#2c3b69] transition">
-              Lihat Lebih Banyak
-            </button>
-          </Link>
-        </div> */}
-      </div>
+          </SwiperSlide>
+        ))}
+      </Swiper>
     </div>
   );
 };
