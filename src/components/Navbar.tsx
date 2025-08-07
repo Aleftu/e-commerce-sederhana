@@ -34,7 +34,7 @@ const Navbar = () => {
           </label>
           <ul
             tabIndex={0}
-            className="menu menu-md dropdown-content mt-3 z-[1] p-2 shadow-md bg-slate-300 text-black rounded-box w-52"
+            className="menu menu-md dropdown-content mt-3 z-[1] p-2 shadow-md bg-slate-300 text-black rounded-box w-52 hover:bg-[#6a79bd] hover:text-white"
           >
             <li><a href="#">Beranda</a></li>
             <li><button onClick={scrollToProduk}>Produk</button></li>
